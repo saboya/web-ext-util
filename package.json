@@ -1,0 +1,29 @@
+{
+  "name": "web-ext-util",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "oxlint --fix",
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saboya/web-ext-util.git"
+  },
+  "author": "Rodrigo Saboya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/saboya/web-ext-util/issues"
+  },
+  "homepage": "https://github.com/saboya/web-ext-util#readme",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/chrome": "^0.0.317",
+    "@types/node": "^22.15.2",
+    "jsdom": "^26.1.0",
+    "oxlint": "^0.16.8",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.2"
+  }
+}
