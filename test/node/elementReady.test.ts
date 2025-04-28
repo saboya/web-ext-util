@@ -3,7 +3,7 @@
  */
 
 import { beforeEach, describe, expect, test } from 'vitest'
-import { elementReady } from '../../src/util/elementReady'
+import { elementReady } from '~/util/elementReady'
 
 describe('elementReady', () => {
   beforeEach(() => {

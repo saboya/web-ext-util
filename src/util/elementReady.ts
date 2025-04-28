@@ -1,7 +1,12 @@
 import { AbortablePromise } from '~/util/AbortablePromise'
 
-export async function elementReady<T extends Node>(cb: () => T | null, target: Node, signal?: AbortSignal): Promise<T> {
-  const firstCheck = cb()
+export async function elementReady<T extends Node>(
+  cb: (records: MutationRecord[]) => T | null,
+  target: Node,
+  signal?: AbortSignal,
+  options: MutationObserverInit = { childList: true },
+): Promise<T> {
+  const firstCheck = cb([])
 
   if (firstCheck !== null) {
     return Promise.resolve(firstCheck)
@@ -9,24 +14,24 @@ export async function elementReady<T extends Node>(cb: () => T | null, target: N
 
   const eventTarget = new EventTarget()
 
-  const handler: MutationCallback = (_, observer) => {
-    eventTarget.dispatchEvent(new Event('newRecords'))
+  const handler: MutationCallback = (records, _) => {
+    eventTarget.dispatchEvent(new CustomEvent('newRecords', { detail: records }))
   }
 
   const observer = new MutationObserver(handler)
 
   const mutationPromise = new Promise<T>((resolve, _) => {
-    eventTarget.addEventListener('newRecords', () => {
-      const ret = cb()
+    eventTarget.addEventListener('newRecords', ((event: CustomEvent<MutationRecord[]>) => {
+      const ret = cb(event.detail)
 
       if (ret === null) {
         return
       }
 
       resolve(ret)
-    })
+    }) as EventListener)
 
-    observer.observe(target, { childList: true })
+    observer.observe(target, options)
   })
 
   return AbortablePromise.from(mutationPromise, signal).finally(() => observer.disconnect())
